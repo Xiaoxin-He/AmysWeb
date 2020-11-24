@@ -12,7 +12,7 @@ sudo python -m pip3 install flask --user
 ### To run the web service:
 - First, activate the amysBakeryWeb's environment:
 ````
-source amysBakery_venv/bin/activate
+source venv/bin/activate
 ````
 - Second, set the environment to be "development":
 ````
