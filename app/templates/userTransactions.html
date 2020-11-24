@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {% block content %}
+
+
+<h1>hello: {{ user.username }}</h1>
+
+
+<!-- {% for product in products %}
+<h1>{{ product[0] }} is successfully added</h1> -->
+
+
+<!-- <form name="ShoppingList">
+    <fieldset>
+        <legend>Shopping cart</legend>
+        <label>Item: <input type="text" name="name"></label>
+        <label>Quantity: <input type="text" name="data"></label>
+
+        <input type="button" value="Save" onclick="SaveItem()">
+        <input type="button" value="Update" onclick="ModifyItem()">
+        <input type="button" value="Delete" onclick="RemoveItem()">
+    </fieldset>
+    <div id="items_table">
+        <h2>Shopping List</h2>
+        <table id="list"></table>
+        <label><input type="button" value="Clear" onclick="ClearAll()">
+        * Delete all items</label>
+    </div>
+</form> -->
+
+<div class="cart-items">
+    <div class="cart-row">
+        <div class="cart-item cart-column">
+            <img class="cart-item-image" src="../static/images/cake2.jpeg" width="200" height="200">
+            <span class="cart-item-title">cake2</span>
+        </div>
+        <span class="cart-price cart-column">$10</span>
+        <div class="cart-quantity cart-column">
+            <input class="cart-quantity-input" type="number" value="1">
+            <button class="btn btn-danger" type="button">REMOVE</button>
+        </div>
+    </div>
+    <br>
+    <div class="cart-row">
+        <div class="cart-item cart-column">
+            <img class="cart-item-image" src="../static/images/cake3.jpeg" width="200" height="200">
+            <span class="cart-item-title">cake3</span>
+        </div>
+        <span class="cart-price cart-column">$5</span>
+        <div class="cart-quantity cart-column">
+            <input class="cart-quantity-input" type="number" value="2">
+            <button class="btn btn-danger" type="button">REMOVE</button>
+        </div>
+    </div>
+</div>
+<div class="cart-total">
+    <strong class="cart-total-title">Total</strong>
+    <span class="cart-total-price">$25</span>
+</div>
+<button class="btn btn-primary btn-purchase" type="button">PURCHASE</button> {% endfor %} {% endblock %}
