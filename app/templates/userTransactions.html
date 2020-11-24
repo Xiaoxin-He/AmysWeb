@@ -55,4 +55,4 @@
     <strong class="cart-total-title">Total</strong>
     <span class="cart-total-price">$25</span>
 </div>
-<button class="btn btn-primary btn-purchase" type="button">PURCHASE</button> {% endfor %} {% endblock %}
+<a href="{{ url_for('checkout', username = current_user.username) }}" class="btn btn-info">proceed to checkout</a> {% endfor %} {% endblock %}

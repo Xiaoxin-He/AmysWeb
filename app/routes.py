@@ -46,11 +46,21 @@ def userTransactions(username):
     user = User.query.filter_by(username=username).first_or_404()
 
     conn = get_db_connection()
-    products = conn.execute('SELECT * FROM products;').fetchall()
+    products = conn.execute('SELECT price FROM products;').fetchall()
+
     conn.close()
 
   
     return render_template('userTransactions.html', user=user, products = products)
+
+@app.route('/checkout/<username>')
+def checkout(username):
+
+    user = User.query.filter_by(username=username).first_or_404()
+
+    return render_template('checkout.html', user=user)
+
+
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():

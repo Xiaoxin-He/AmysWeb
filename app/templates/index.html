@@ -1,8 +1,18 @@
 {% extends 'base.html' %} {% block content %}
 <div class="background">
+
+    <h5>Search Whatever You Want</h5>
+
+    <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+        <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+    </div>
+
+
     <h4>Here are our menu</h4>
 
+
     <h1>Hello, {{ user.username }}!</h1>
+
 
 
     <div class="card-deck">
@@ -19,6 +29,8 @@
         </div>
         {% endfor %}
     </div>
+
+
 
 
 </div>

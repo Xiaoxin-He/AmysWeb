@@ -38,11 +38,10 @@ def load_user(id):
 class Product(db.Model):
     __tablename__ = 'products'
     id = db.Column(db.Integer, primary_key=True)
-    product_name = db.Column(db.String(64), index=True)
-    description = db.Column(db.String(128), index=True)
-    price = db.Column(db.Integer)
-    product_kind = db.Column(db.String(128), index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    product_name = db.Column(db.String(64))
+    description = db.Column(db.Text)
+    price = db.Column(db.INTEGER)
+    product_kind = db.Column(db.String(128))
 
     def __repr__(self) :
         return '<Product {}>'.format(self.product_name)
