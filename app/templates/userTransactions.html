@@ -1,14 +1,14 @@
 {% extends 'base.html' %} {% block content %}
 
+<div class="jumbotron">
+    <h1>hello: {{ user.username }}</h1>
 
-<h1>hello: {{ user.username }}</h1>
 
-
-<!-- {% for product in products %}
+    <!-- {% for product in products %}
 <h1>{{ product[0] }} is successfully added</h1> -->
 
 
-<!-- <form name="ShoppingList">
+    <!-- <form name="ShoppingList">
     <fieldset>
         <legend>Shopping cart</legend>
         <label>Item: <input type="text" name="name"></label>
@@ -26,33 +26,36 @@
     </div>
 </form> -->
 
-<div class="cart-items">
-    <div class="cart-row">
-        <div class="cart-item cart-column">
-            <img class="cart-item-image" src="../static/images/cake2.jpeg" width="200" height="200">
-            <span class="cart-item-title">cake2</span>
+    <div class="cart-items">
+        <div class="cart-row">
+            <div class="cart-item cart-column">
+                <img class="cart-item-image" src="../static/images/cake2.jpeg" width="200" height="200">
+                <span class="cart-item-title">cake2</span>
+            </div>
+            <span class="cart-price cart-column">$10</span>
+            <div class="cart-quantity cart-column">
+                <input class="cart-quantity-input" type="number" value="1">
+                <button class="btn btn-danger" type="button">REMOVE</button>
+            </div>
         </div>
-        <span class="cart-price cart-column">$10</span>
-        <div class="cart-quantity cart-column">
-            <input class="cart-quantity-input" type="number" value="1">
-            <button class="btn btn-danger" type="button">REMOVE</button>
+        <br>
+        <div class="cart-row">
+            <div class="cart-item cart-column">
+                <img class="cart-item-image" src="../static/images/cake3.jpeg" width="200" height="200">
+                <span class="cart-item-title">cake3</span>
+            </div>
+            <span class="cart-price cart-column">$5</span>
+            <div class="cart-quantity cart-column">
+                <input class="cart-quantity-input" type="number" value="2">
+                <button class="btn btn-danger" type="button">REMOVE</button>
+            </div>
         </div>
     </div>
-    <br>
-    <div class="cart-row">
-        <div class="cart-item cart-column">
-            <img class="cart-item-image" src="../static/images/cake3.jpeg" width="200" height="200">
-            <span class="cart-item-title">cake3</span>
-        </div>
-        <span class="cart-price cart-column">$5</span>
-        <div class="cart-quantity cart-column">
-            <input class="cart-quantity-input" type="number" value="2">
-            <button class="btn btn-danger" type="button">REMOVE</button>
-        </div>
+    <div class="cart-total">
+        <strong class="cart-total-title">Total</strong>
+        <span class="cart-total-price">$25</span>
     </div>
+    <a href="{{ url_for('checkout', username = current_user.username) }}" class="btn btn-info">proceed to checkout</a>
+
 </div>
-<div class="cart-total">
-    <strong class="cart-total-title">Total</strong>
-    <span class="cart-total-price">$25</span>
-</div>
-<a href="{{ url_for('checkout', username = current_user.username) }}" class="btn btn-info">proceed to checkout</a> {% endfor %} {% endblock %}
+{% endfor %} {% endblock %}

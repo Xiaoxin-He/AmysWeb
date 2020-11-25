@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AmysBakery Login Page</title>
+    <title>Admin Login Page</title>
 
-    <link href="{{url_for('static', filename='css/loginPage.css')}}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -21,7 +20,7 @@
 
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
-                <h1 class="display-4">Welcome to Amy's Bakery !</h1>
+                <h1 class="display-4">Welcome to admin login Page!</h1>
 
             </div>
         </div>
@@ -43,11 +42,19 @@
                 </div>
             </div>
 
+
+            <div class="form-group">
+                <div>
+                    <label for="InputSecretKeyLabel">Enter your secret key</label>
+                    <br> {{ form.secret_key(size=32) }}
+                </div>
+            </div>
+
             <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
 
             <button type="submit" class="btn btn-primary">Submit</button>
 
-            <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
+            <!-- <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p> -->
 
 
             <div id="flash"><br/> {% with messages = get_flashed_messages() %} {% if messages %}

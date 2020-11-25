@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
-<div class="background">
+<!-- <div class="background"> -->
 
-    <h5>Search Whatever You Want</h5>
+<!-- <h5>Search Whatever You Want</h5>
 
     <div class="md-form active-pink active-pink-2 mb-3 mt-0">
         <input class="form-control" type="text" placeholder="Search" aria-label="Search">
@@ -11,16 +11,21 @@
     <h4>Here are our menu</h4>
 
 
-    <h1>Hello, {{ user.username }}!</h1>
+    <h1>Hello, {{ user.username }}!</h1> -->
+
+<div class="jumbotron">
+    <h1>Welcome to our Adoption Page</h1>
+    <p>Please select one of the links from the nav bar.</p>
+</div>
 
 
 
-    <div class="card-deck">
+
+<!-- <div class="card-deck">
         {% for image in totalImages %}
         <div class="card" style="width: 40rem;">
 
             <img src="{{ image }}" class="card-img-top" alt="..." />
-            <!-- <img src="{{ upload_image }}" class="card-img-top" alt="..."> -->
             <div class="card-body text-center">
                 <h5 class="title">strawberry cake</h5>
                 <p class="text">This cake contains strawberry</p>
@@ -28,13 +33,52 @@
             </div>
         </div>
         {% endfor %}
-    </div>
+    </div> -->
+
+<!-- <div class="card-deck">
+        <div class="card" style="width: 40rem;">
+            <img src="../static/images/cake1.jpeg" class="card-img-top" alt="..." />
+            <div class="card-body text-center">
+                <h5 class="title">strawberry cake</h5>
+                <p class="text">This cake contains strawberry</p>
+                <a href="{{ url_for('userTransactions', username = current_user.username) }}" class="btn btn-primary">add to cart</a>
+            </div>
+        </div>
+
+        <div class="card" style="width: 40rem;">
+            <img src="../static/images/cake2.jpeg" class="card-img-top" alt="..." />
+            <div class="card-body text-center">
+                <h5 class="title">chocolate cake</h5>
+                <p class="text">This cake contains chocolate</p>
+                <a href="{{ url_for('userTransactions', username = current_user.username) }}" class="btn btn-primary">add to cart</a>
+            </div>
+        </div>
+
+        <div class="card" style="width: 40rem;">
+            <img src="../static/images/cake3.jpeg" class="card-img-top" alt="..." />
+            <div class="card-body text-center">
+                <h5 class="title">white chocolate cake</h5>
+                <p class="text">This cake contains white chocolate</p>
+                <a href="{{ url_for('userTransactions', username = current_user.username) }}" class="btn btn-primary">add to cart</a>
+            </div>
+        </div>
+
+        <div class="card" style="width: 40rem;">
+            <img src="../static/images/cake4.jpeg" class="card-img-top" alt="..." />
+            <div class="card-body text-center">
+                <h5 class="title">pink cake</h5>
+                <p class="text">This cake is cute</p>
+                <a href="{{ url_for('userTransactions', username = current_user.username) }}" class="btn btn-primary">add to cart</a>
+            </div>
+        </div>
+    </div> -->
 
 
 
 
-</div>
 
-</div>
+<!-- </div> -->
+
+<!-- </div> -->
 
 {% endblock %}

@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect,session
 from app import app, db
-from app.forms import LoginForm
+from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm, AdminLoginForm
 from app.models import User, Product
 from flask_login import current_user, login_user, logout_user
 from flask.helpers import url_for
@@ -23,7 +23,7 @@ def get_db_connection():
     return conn
 
 @app.route('/')
-@app.route('/index')
+# @app.route('/index')
 def index():
 
     user = current_user
@@ -76,6 +76,26 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html',title='Log in',form=form)
 
+@app.route('/admin_login', methods = ['GET', 'POST'])
+def admin_login():
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('admin_index'))
+    form = AdminLoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username = form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        # return redirect(url_for('admin_index'))
+        return render_template('admin_index.html')
+    return render_template('admin_login.html',title='Log in admin',form=form)
+
+@app.route('/admin_index')
+def admin_index():
+    return render_template('admin_index.html')
+
+
 @app.route('/logout')
 def logout():
     logout_user()
@@ -97,7 +117,63 @@ def get_image():
     #     abort(404)
     
     
+############################################
 
+        # VIEWS WITH FORMS
+
+##########################################
+@app.route('/admin_index/add', methods = ['GET', 'POST'])
+def add_products():
+
+    form = AddProductsForm()
+
+    if form.validate_on_submit():
+        product_name = form.product_name.data
+
+        #add new products to database
+        new_product = Product(product_name)
+        db.session.add(new_product)
+        db.session.commit()
+
+        return redirect(url_for('list_products'))
+    
+
+    return render_template('add.html', form = form)
+
+@app.route('/admin_index/list')
+def list_products():
+    # Grab a list of products from database.
+    products = Product.query.all()
+    print(products)
+    return render_template('list.html', products = products)
+    
+@app.route('/admin_index/delete', methods=['GET', 'POST'])
+def del_products():
+
+    form = DeleteForm()
+
+    if form.validate_on_submit():
+        id = form.id.data
+        product_name = Product.query.get(id)
+        db.session.delete(product_name)
+        db.session.commit()
+
+        return redirect(url_for('list_products'))
+    return render_template('delete.html',form=form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
 
 if __name__ == '__main__':
    app.run(debug=True)

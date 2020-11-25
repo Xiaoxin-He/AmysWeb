@@ -1,0 +1,11 @@
+{% extends "admin_index.html" %} {% block content %}
+<div class="jumbotron">
+    <h1>Here is a list of all available puppies.</h1>
+    <ul>
+        {% for p in products %}
+        <li>{{p}}</li>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}
