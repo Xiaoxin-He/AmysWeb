@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect,session
 from app import app, db
-from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm, AdminLoginForm
+from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm
 from app.models import User, Product
 from flask_login import current_user, login_user, logout_user
 from flask.helpers import url_for
@@ -26,39 +26,40 @@ def get_db_connection():
 # @app.route('/index')
 def index():
 
-    user = current_user
+    # user = current_user
 
 
-    filenames = []
-    for file in os.listdir(folder):
-        filename = "static/images/" + os.fsdecode(file)
-        if filename.endswith( ('.jpeg') ):
-            filenames.append(filename)
+    # filenames = []
+    # for file in os.listdir(folder):
+    #     filename = "static/images/" + os.fsdecode(file)
+    #     if filename.endswith( ('.jpeg') ):
+    #         filenames.append(filename)
     
-    filenames.sort()
-    print(filenames)
+    # filenames.sort()
+    # print(filenames)
+    # , title = "home page", user = user, totalImages=filenames
 
-    return render_template('index.html', title = "home page", user = user, totalImages=filenames)
+    return render_template('index.html')
     
-@app.route('/userTransactions/<username>')
-def userTransactions(username):
+# @app.route('/userTransactions/<username>')
+# def userTransactions(username):
 
-    user = User.query.filter_by(username=username).first_or_404()
+#     user = User.query.filter_by(username=username).first_or_404()
 
-    conn = get_db_connection()
-    products = conn.execute('SELECT price FROM products;').fetchall()
+#     conn = get_db_connection()
+#     products = conn.execute('SELECT price FROM products;').fetchall()
 
-    conn.close()
+#     conn.close()
 
   
-    return render_template('userTransactions.html', user=user, products = products)
+#     return render_template('userTransactions.html', user=user, products = products)
 
-@app.route('/checkout/<username>')
-def checkout(username):
+# @app.route('/checkout/<username>')
+# def checkout(username):
 
-    user = User.query.filter_by(username=username).first_or_404()
+#     user = User.query.filter_by(username=username).first_or_404()
 
-    return render_template('checkout.html', user=user)
+#     return render_template('checkout.html', user=user)
 
 
 
@@ -76,20 +77,20 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html',title='Log in',form=form)
 
-@app.route('/admin_login', methods = ['GET', 'POST'])
-def admin_login():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('admin_index'))
-    form = AdminLoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username = form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        # return redirect(url_for('admin_index'))
-        return render_template('admin_index.html')
-    return render_template('admin_login.html',title='Log in admin',form=form)
+# @app.route('/admin_login', methods = ['GET', 'POST'])
+# def admin_login():
+#     # if current_user.is_authenticated:
+#     #     return redirect(url_for('admin_index'))
+#     form = AdminLoginForm()
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(username = form.username.data).first()
+#         if user is None or not user.check_password(form.password.data):
+#             flash('Invalid username or password')
+#             return redirect(url_for('login'))
+#         login_user(user, remember=form.remember_me.data)
+#         # return redirect(url_for('admin_index'))
+#         return render_template('admin_index.html')
+#     return render_template('admin_login.html',title='Log in admin',form=form)
 
 @app.route('/admin_index')
 def admin_index():
@@ -122,7 +123,7 @@ def get_image():
         # VIEWS WITH FORMS
 
 ##########################################
-@app.route('/admin_index/add', methods = ['GET', 'POST'])
+@app.route('/add', methods = ['GET', 'POST'])
 def add_products():
 
     form = AddProductsForm()
@@ -140,14 +141,14 @@ def add_products():
 
     return render_template('add.html', form = form)
 
-@app.route('/admin_index/list')
+@app.route('/list')
 def list_products():
     # Grab a list of products from database.
     products = Product.query.all()
     print(products)
     return render_template('list.html', products = products)
     
-@app.route('/admin_index/delete', methods=['GET', 'POST'])
+@app.route('/delete', methods=['GET', 'POST'])
 def del_products():
 
     form = DeleteForm()

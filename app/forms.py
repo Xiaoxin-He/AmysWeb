@@ -12,19 +12,19 @@ class LoginForm(FlaskForm):
 class AddProductsForm(FlaskForm):
     
     product_name = StringField('Name of Product:')
-    submit = SubmitField('Add Puppy')
+    submit = SubmitField('Add Product')
 
 class DeleteForm(FlaskForm):
 
     id = IntegerField('Id Number of Product to Remove:')
     submit = SubmitField('Remove Product')
 
-class AdminLoginForm(FlaskForm):
-    username = StringField('Username',validators=[DataRequired(message='Username')])
-    password = PasswordField('Password',validators=[DataRequired(message='Password')])
-    secret_key = PasswordField('Secret_key',validators=[DataRequired(message='admin secret_key')])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Login')
+# class AdminLoginForm(FlaskForm):
+#     username = StringField('Username',validators=[DataRequired(message='Username')])
+#     password = PasswordField('Password',validators=[DataRequired(message='Password')])
+#     secret_key = PasswordField('Secret_key',validators=[DataRequired(message='admin secret_key')])
+#     remember_me = BooleanField('Remember Me')
+#     submit = SubmitField('Login')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])

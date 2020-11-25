@@ -1,6 +1,6 @@
-{% extends "admin_index.html" %} {% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="jumbotron">
-    <h1>Here is a list of all available puppies.</h1>
+    <h1>Here is a list of all available products.</h1>
     <ul>
         {% for p in products %}
         <li>{{p}}</li>
