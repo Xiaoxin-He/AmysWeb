@@ -148,16 +148,21 @@ def add_products():
         product_name = form.product_name.data
         product_description = form.product_description.data
 
-        # product_image = form.product_image
+
+        # product_image = form.product_image.data
         
-        uploaded_file = request.files['file']
+        # this 'filename' is the name in add.html
+        uploaded_file = request.files['fileName']
         filename = secure_filename(uploaded_file.filename)
+        url = uploaded_file.filename
 
         if filename != '':
             uploaded_file.save(os.path.join('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename))
 
+        
+        # product_image =filename
         #add new products to database
-        new_product = Product(product_name, product_description)
+        new_product = Product(product_name, product_description, url)
         # new_description = Product(product_description)
 
         #get filename1

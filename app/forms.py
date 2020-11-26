@@ -13,7 +13,7 @@ class LoginForm(FlaskForm):
 class AddProductsForm(FlaskForm):
 
     product_name = StringField('Name of Product:')
-    product_image = FileField('File')
+    file = FileField('File')
     product_description = StringField('Description of Product:')
     # picture = FileField('Update product Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Add Product')
