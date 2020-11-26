@@ -1,8 +1,24 @@
 {% extends "base.html" %} {% block content %}
 <div class="jumbotron">
     <p>Add a new product with the form below:</p>
-    <form method="POST">
-        {# This hidden_tag is a CSRF security feature. #} {{ form.hidden_tag() }} {{ form.product_name.label }} {{ form.product_name() }} {{ form.submit() }}
+    <form method="POST" action="" enctype="multipart/form-data">
+
+        {# This hidden_tag is a CSRF security feature. #} {{ form.hidden_tag() }}
+
+        <br> {{ form.product_name.label }} {{ form.product_name() }}
+
+
+        <br> {{ form.product_description.label }} {{ form.product_description() }}
+
+        <!-- <br> {{ form.submit() }} -->
+
+
+
+        <p><input type="file" name="file"></p>
+        <p><input type="submit" value="Submit"></p>
     </form>
+
+    {% for f in files %}
+    <img src="{{ url_for('list_products', filename=f) }}" style="width: 64px"> {% endfor %}
 </div>
 {% endblock %}

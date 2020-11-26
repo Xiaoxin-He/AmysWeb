@@ -63,10 +63,10 @@ class Product(db.Model):
     product_image = FileField('picture')
 
 
-    def __init__(self,product_name):
+    def __init__(self,product_name, product_description):
         self.product_name = product_name
         # self.id = id
-        # self.product_description = product_description
+        self.product_description = product_description
 
     def __repr__(self):
         return f"Product name: {self.product_name}  --- id is : {self.id}  --- description : {self.product_description}"

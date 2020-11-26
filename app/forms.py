@@ -13,7 +13,9 @@ class LoginForm(FlaskForm):
 class AddProductsForm(FlaskForm):
 
     product_name = StringField('Name of Product:')
-    picture = FileField('Update product Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+    product_image = FileField('File')
+    product_description = StringField('Description of Product:')
+    # picture = FileField('Update product Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Add Product')
 
 class DeleteForm(FlaskForm):

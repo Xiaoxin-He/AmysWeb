@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect,session, request
+from flask import render_template, flash, redirect,session, request, make_response,jsonify
 from flask.globals import current_app
 from app import app, db
 from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm
@@ -6,9 +6,14 @@ from app.models import User, Product
 from flask_login import current_user, login_user, logout_user
 from flask.helpers import url_for
 import sqlite3
-
+# **************
+import imghdr
 import os
-from flask_uploads import configure_uploads, IMAGES, UploadSet
+# from flask import Flask, render_template, request, redirect, url_for, abort, \
+#     send_from_diresctory
+from werkzeug.utils import secure_filename
+# import os
+# from flask_uploads import configure_uploads, IMAGES, UploadSet
 
 # pip install pillow
 from PIL import Image
@@ -18,19 +23,28 @@ from flask import url_for, current_app
 from flask import send_file, send_from_directory, safe_join, abort
 
 
-app.config['SECRET_KEY'] = 'thisisasecret'
-app.config['UPLOADED_IMAGES_DEST'] = 'static/images'
+import cv2
+import time
 
-images = UploadSet('images', IMAGES)
-configure_uploads(app, images)
-
+from datetime import timedelta
 
 
-PEOPLE_FOLDER = os.path.join('static', 'images')
-app.config['IMAGE_UPLOADS'] = PEOPLE_FOLDER
-path = '/Users/xiaoxinhe/Desktop/amysBakeryWeb/app/static/images'
+if __name__ == '__main__':
+    app.run(debug=True)
 
-folder = os.fsencode(path)
+# app.config['SECRET_KEY'] = 'thisisasecret'
+# app.config['UPLOADED_IMAGES_DEST'] = 'static/images'
+
+# images = UploadSet('images', IMAGES)
+# configure_uploads(app, images)
+
+
+
+# PEOPLE_FOLDER = os.path.join('static', 'images')
+# app.config['IMAGE_UPLOADS'] = PEOPLE_FOLDER
+# path = '/Users/xiaoxinhe/Desktop/amysBakeryWeb/app/static/images'
+
+# folder = os.fsencode(path)
 
 def get_db_connection():
     conn = sqlite3.connect('app.db')
@@ -117,22 +131,6 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-
-@app.route("/get-image")
-def get_image():
-    # filename = f"{image_name}.jpeg"
-    full_filename = os.path.join(app.config['IMAGE_UPLOADS'], 'cake1.jpeg')
-
-    # basepath = os.path.dirname(__file__)  
-    # upload_file = os.path.join(basepath, 'static/images', secure_filename(filename))
-    return render_template('image.html', upload_file = full_filename)
-    
-    # try:
-    #     return send_from_directory(app.config["IMAGE_UPLOADS"], filename=filename, as_attachment=False)
-    # except FileNotFoundError:
-    #     abort(404)
-    
-    
 ############################################
 
         # VIEWS WITH FORMS
@@ -142,17 +140,38 @@ def get_image():
 def add_products():
 
     form = AddProductsForm()
+    #get uploaded file here1
+    # uploaded_file = request.files['file']
+    # filename = secure_filename(uploaded_file.filename)
 
     if form.validate_on_submit():
         product_name = form.product_name.data
+        product_description = form.product_description.data
+
+        # product_image = form.product_image
+        
+        uploaded_file = request.files['file']
+        filename = secure_filename(uploaded_file.filename)
+
+        if filename != '':
+            uploaded_file.save(os.path.join('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename))
 
         #add new products to database
-        new_product = Product(product_name)
+        new_product = Product(product_name, product_description)
+        # new_description = Product(product_description)
+
+        #get filename1
+        # new_file = Product(product_image = uploaded_file.filename)
+
         db.session.add(new_product)
+        # db.session.add(new_description)
+        # db.session.add(new_file)
+
         db.session.commit()
 
+        # print('file' + uploaded_file)
+
         return redirect(url_for('list_products'))
-    
 
     return render_template('add.html', form = form)
 
@@ -161,7 +180,10 @@ def list_products():
     # Grab a list of products from database.
     products = Product.query.all()
     print(products)
-    return render_template('list.html', products = products)
+
+    files = os.listdir('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images')
+
+    return render_template('list.html', products = products, files = files)
     
 @app.route('/delete', methods=['GET', 'POST'])
 def del_products():
@@ -171,7 +193,9 @@ def del_products():
     if form.validate_on_submit():
         id = form.id.data
         product_name = Product.query.get(id)
+        product_description = Product.query.get(id)
         db.session.delete(product_name)
+        db.session.delete(product_description)
         db.session.commit()
 
         return redirect(url_for('list_products'))
@@ -191,39 +215,25 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+# **************
 
-def get_image(pic_upload, product_name):
-    filename = pic_upload.filename
+# app.config['UPLOAD_FOLDER'] = 'static/images'
 
-    ext_type = filename.split('.')[-1]
-    storage_filename = str(product_name) + '.' + ext_type
+# @app.route('/upload')
+# def indexbb():
+#     files = os.listdir('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images')
+#     return render_template('image.html', files=files)
 
-    filepath = os.path.join(current_app.root_path, 'static/images', storage_filename)
+# @app.route('/upload', methods=['GET', 'POST'])
+# def upload_file():
+#     uploaded_file = request.files['file']
+#     # print(uploaded_file)
+#     filename = secure_filename(uploaded_file.filename)
+#     if filename != '':
+#         # file_ext = os.path.splitext(filename)[1]
+#         uploaded_file.save(os.path.join('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename))
+#     return redirect(url_for('indexbb'))
 
-    output_size = (200, 200)
-    # Open the picture and save it
-    pic = Image.open(pic_upload)
-    pic.thumbnail(output_size)
-    pic.save(filepath)
-
-    return storage_filename
-
-
-
-@app.route('/add_image', methods = ['GET', 'POST'])
-def add_image():
-    # file = request.files['inputFile']
-    form = AddProductsForm()
-
-    if form.validate_on_submit():
-        filename = images.save(form.picture.data)
-        return f'Filename: { filename }'
-        # print(form.picture.data)
-
-    return render_template('image.html', form = form)
-
-
-@app.route('/add_image/<filename>')
-def display_image(filename):
-	# print('display_image filename: ' + filename)
-	return redirect(url_for('static', filename='static/' + filename), code=301)
+@app.route('/uploads/<filename>')
+def upload(filename):
+    return send_from_directory('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename)

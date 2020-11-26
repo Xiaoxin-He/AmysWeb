@@ -1,43 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %} {% block content %}
+<h1>File Upload</h1>
+<div class="jumbotron">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <title>Python Flask File Upload Example</title>
-    <h2>Select a file to upload</h2>
-</head>
-
-<body>
-    <p>
-        {% with messages = get_flashed_messages() %} {% if messages %}
-        <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %} {% endwith %}
-    </p>
-
-    {% if filename %}
-    <div>
-        <img src="{{ url_for('display_image', filename=filename) }}">
-    </div>
-    {% endif %}
-    <form method="post" action="/" enctype="multipart/form-data">
-        <dl>
-            <p>
-                <input type="file" name="file" autocomplete="off" required>
-            </p>
-        </dl>
-        <p>
-            <input type="submit" value="Submit">
-        </p>
+    <form method="POST" action="" enctype="multipart/form-data">
+        <p><input type="file" name="file"></p>
+        <p><input type="submit" value="Submit"></p>
     </form>
-
-
-</body>
-
-</html>
+    <hr> {% for file in files %}
+    <img src="{{ url_for('upload', filename=file) }}" style="width: 64px"> {% endfor %}
+</div>
+{% endblock %}
