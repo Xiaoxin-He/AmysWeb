@@ -147,34 +147,22 @@ def add_products():
     if form.validate_on_submit():
         product_name = form.product_name.data
         product_description = form.product_description.data
-
-
         # product_image = form.product_image.data
         
         # this 'filename' is the name in add.html
         uploaded_file = request.files['fileName']
         filename = secure_filename(uploaded_file.filename)
-        url = uploaded_file.filename
+        product_image = uploaded_file.filename
 
         if filename != '':
             uploaded_file.save(os.path.join('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename))
 
-        
-        # product_image =filename
-        #add new products to database
-        new_product = Product(product_name, product_description, url)
-        # new_description = Product(product_description)
+        new_product = Product(product_name, product_description, product_image)
 
-        #get filename1
-        # new_file = Product(product_image = uploaded_file.filename)
 
         db.session.add(new_product)
-        # db.session.add(new_description)
-        # db.session.add(new_file)
 
         db.session.commit()
-
-        # print('file' + uploaded_file)
 
         return redirect(url_for('list_products'))
 
@@ -220,24 +208,6 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-# **************
-
-# app.config['UPLOAD_FOLDER'] = 'static/images'
-
-# @app.route('/upload')
-# def indexbb():
-#     files = os.listdir('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images')
-#     return render_template('image.html', files=files)
-
-# @app.route('/upload', methods=['GET', 'POST'])
-# def upload_file():
-#     uploaded_file = request.files['file']
-#     # print(uploaded_file)
-#     filename = secure_filename(uploaded_file.filename)
-#     if filename != '':
-#         # file_ext = os.path.splitext(filename)[1]
-#         uploaded_file.save(os.path.join('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename))
-#     return redirect(url_for('indexbb'))
 
 @app.route('/uploads/<filename>')
 def upload(filename):
