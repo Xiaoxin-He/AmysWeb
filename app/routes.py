@@ -1,14 +1,29 @@
-from flask import render_template, flash, redirect,session
+from flask import render_template, flash, redirect,session, request
+from flask.globals import current_app
 from app import app, db
 from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm
 from app.models import User, Product
 from flask_login import current_user, login_user, logout_user
 from flask.helpers import url_for
 import sqlite3
-from werkzeug.utils import secure_filename
+
 import os
+from flask_uploads import configure_uploads, IMAGES, UploadSet
+
+# pip install pillow
+from PIL import Image
+
+from flask import url_for, current_app
 
 from flask import send_file, send_from_directory, safe_join, abort
+
+
+app.config['SECRET_KEY'] = 'thisisasecret'
+app.config['UPLOADED_IMAGES_DEST'] = 'static/images'
+
+images = UploadSet('images', IMAGES)
+configure_uploads(app, images)
+
 
 
 PEOPLE_FOLDER = os.path.join('static', 'images')
@@ -176,5 +191,39 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-if __name__ == '__main__':
-   app.run(debug=True)
+
+def get_image(pic_upload, product_name):
+    filename = pic_upload.filename
+
+    ext_type = filename.split('.')[-1]
+    storage_filename = str(product_name) + '.' + ext_type
+
+    filepath = os.path.join(current_app.root_path, 'static/images', storage_filename)
+
+    output_size = (200, 200)
+    # Open the picture and save it
+    pic = Image.open(pic_upload)
+    pic.thumbnail(output_size)
+    pic.save(filepath)
+
+    return storage_filename
+
+
+
+@app.route('/add_image', methods = ['GET', 'POST'])
+def add_image():
+    # file = request.files['inputFile']
+    form = AddProductsForm()
+
+    if form.validate_on_submit():
+        filename = images.save(form.picture.data)
+        return f'Filename: { filename }'
+        # print(form.picture.data)
+
+    return render_template('image.html', form = form)
+
+
+@app.route('/add_image/<filename>')
+def display_image(filename):
+	# print('display_image filename: ' + filename)
+	return redirect(url_for('static', filename='static/' + filename), code=301)

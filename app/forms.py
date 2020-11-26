@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField,BooleanField,SubmitField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
+from flask_wtf.file import FileField, FileAllowed
 
 class LoginForm(FlaskForm):
     username = StringField('Username',validators=[DataRequired(message='Username')])
@@ -10,13 +11,15 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class AddProductsForm(FlaskForm):
-    
+
     product_name = StringField('Name of Product:')
+    picture = FileField('Update product Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Add Product')
 
 class DeleteForm(FlaskForm):
 
     id = IntegerField('Id Number of Product to Remove:')
+
     submit = SubmitField('Remove Product')
 
 # class AdminLoginForm(FlaskForm):

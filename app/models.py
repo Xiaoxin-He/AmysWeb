@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import login
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required, UserMixin
 from flask import session
+from wtforms import FileField
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -58,12 +59,17 @@ class Product(db.Model):
     __tablename__ = 'products'
     id = db.Column(db.Integer,primary_key = True)
     product_name = db.Column(db.Text)
+    product_description = db.Column(db.Text)
+    product_image = FileField('picture')
+
 
     def __init__(self,product_name):
         self.product_name = product_name
+        # self.id = id
+        # self.product_description = product_description
 
     def __repr__(self):
-        return f"Product name: {self.product_name}"
+        return f"Product name: {self.product_name}  --- id is : {self.id}  --- description : {self.product_description}"
 
 class admin(db.Model):
     __tablename__ = 'administrator'
