@@ -66,8 +66,12 @@ def index():
 
 @app.route('/my_shopping_cart/<username>')
 def shopping_cart(username):
+    conn = get_db_connection()
+    # get all data for products table from database
+    all_products_data = conn.execute('SELECT * FROM products;').fetchall()
+    conn.close()
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('shopping_cart.html', user = user)
+    return render_template('shopping_cart.html', user = user, all_products_data = all_products_data)
     
 # @app.route('/userTransactions/<username>')
 # def userTransactions(username):

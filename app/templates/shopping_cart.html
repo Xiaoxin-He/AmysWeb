@@ -1,5 +1,45 @@
  {% extends "base.html" %} {% block content %}
 
-<h1>Welcome to the page for {{user.username}}</h1>
+<div class="body">
+    <div class="jumbotron">
+        <h2>hello {{user.username}}, here is your shopping cart!</h2>
+    </div>
 
-{% endblock content %}
+
+    <div class="shopping-cart">
+        <div class="title">
+            Shopping Bag
+        </div>
+
+
+        {% for products_list in all_products_data %}
+        <div class="item">
+            <div class="buttons">
+                <span class="delete-btn"></span>
+                <span class="like-btn"></span>
+            </div>
+
+            <div class="image">
+                <img src="{{ url_for('upload', filename=products_list[3]) }}" style="width: 200px">
+            </div>
+
+            <div class="description">
+                {{products_list[2]}}
+            </div>
+
+            <div class="quantity">
+                <button class="plus-btn" type="button" name="button">
+          <img src="plus.svg" alt="" />
+        </button>
+                <input type="text" name="name" value="1">
+                <button class="minus-btn" type="button" name="button">
+          <img src="minus.svg" alt="" />
+        </button>
+            </div>
+
+            <div class="total-price">${{ products_list[4] }}</div>
+        </div>
+    </div>
+</div>
+
+{% endfor %} {% endblock content %}

@@ -61,16 +61,19 @@ class Product(db.Model):
     product_name = db.Column(db.Text)
     product_description = db.Column(db.Text)
     product_image = db.Column(db.String(20), nullable=False)
+    product_price = db.Column(db.REAL)
 
 
-    def __init__(self,product_name, product_description, product_image):
+
+    def __init__(self,product_name, product_description, product_image, product_price):
         self.product_name = product_name
         # self.id = id
         self.product_description = product_description
         self.product_image = product_image
+        self.product_price = product_price
 
     def __repr__(self):
-        return f"Product name: {self.product_name}  --- id is : {self.id}  --- description : {self.product_description}  ----  with {self.product_image}"
+        return f"Product name: {self.product_name}  --- id is : {self.id}  --- description : {self.product_description}  ----  with {self.product_image} ---has {self.product_price}"
 
 class admin(db.Model):
     __tablename__ = 'administrator'
