@@ -1,6 +1,30 @@
 {% extends "base.html" %} {% block content %}
 <div class="jumbotron">
-    <h1>Welcome to our Products Page</h1>
-    <p>Please select one of the links from the nav bar.</p>
+    <h1>Here is a list of all available products.</h1>
+    <ul>
+        {% for p in product_images %}
+        <li>{{p[0]}}</li>
+        {% endfor %}
+    </ul>
+
+
+    <div class="row">
+        {% for products_list in all_products_data %}
+        <div class="col-sm-2">
+            <div class="card" style="width: 19rem;">
+                <img class="card-img-top" src="{{ url_for('upload', filename=products_list[3]) }}" style="width: 300px">
+                <div class="card-body">
+                    <h5 class="card-title">{{products_list[1]}}</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="{{ url_for('add_products') }}" class="btn btn-info">Add To Card</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+
 </div>
 {% endblock %}

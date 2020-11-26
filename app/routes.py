@@ -55,20 +55,19 @@ def get_db_connection():
 # @app.route('/index')
 def index():
 
-    # user = current_user
-
-
-    # filenames = []
-    # for file in os.listdir(folder):
-    #     filename = "static/images/" + os.fsdecode(file)
-    #     if filename.endswith( ('.jpeg') ):
-    #         filenames.append(filename)
+    # products = Product.query.all()
     
-    # filenames.sort()
-    # print(filenames)
-    # , title = "home page", user = user, totalImages=filenames
+    conn = get_db_connection()
+    # get all data for products table from database
+    all_products_data = conn.execute('SELECT * FROM products;').fetchall()
+    conn.close()
 
-    return render_template('index.html')
+    return render_template('index.html', all_products_data = all_products_data)
+
+@app.route('/my_shopping_cart/<username>')
+def shopping_cart(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('shopping_cart.html', user = user)
     
 # @app.route('/userTransactions/<username>')
 # def userTransactions(username):
@@ -149,17 +148,14 @@ def add_products():
         product_description = form.product_description.data
         # product_image = form.product_image.data
         
-        # this 'filename' is the name in add.html
+        # this 'filename' is the name in add.html!
         uploaded_file = request.files['fileName']
         filename = secure_filename(uploaded_file.filename)
         product_image = uploaded_file.filename
 
         if filename != '':
             uploaded_file.save(os.path.join('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename))
-
         new_product = Product(product_name, product_description, product_image)
-
-
         db.session.add(new_product)
 
         db.session.commit()
@@ -167,6 +163,9 @@ def add_products():
         return redirect(url_for('list_products'))
 
     return render_template('add.html', form = form)
+
+
+
 
 @app.route('/list')
 def list_products():

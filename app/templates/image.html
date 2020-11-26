@@ -7,6 +7,6 @@
         <p><input type="submit" value="Submit"></p>
     </form>
     <hr> {% for file in files %}
-    <img src="{{ url_for('upload', filename=file) }}" style="width: 64px"> {% endfor %}
+    <img src="{{ url_for('upload', filename=file, width=100) }}" style="width: 64px"> {% endfor %}
 </div>
 {% endblock %}

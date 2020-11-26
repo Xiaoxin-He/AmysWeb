@@ -18,6 +18,7 @@
         <div class="navbar-nav">
             <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
             <a class="btn btn-info" href="{{ url_for('login') }}">Login</a> {% else %}
+            <a class="nav-item nav-link" href="{{ url_for('shopping_cart', username=current_user.username)}}">My Shopping Cart</a>
             <a class="nav-item nav-link" href="{{ url_for('add_products') }}">Add Products</a>
             <a class="nav-item nav-link" href="{{ url_for('list_products') }}">List of Products</a>
             <a class="nav-item nav-link" href="{{ url_for('del_products') }}">Delete Products</a>
