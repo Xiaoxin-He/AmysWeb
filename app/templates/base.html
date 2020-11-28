@@ -4,38 +4,79 @@
 <head>
     <meta charset="utf-8">
 
-    <link href="{{url_for('static', filename='css/shopping_cart.css')}}" rel="stylesheet">
+
+
+
+
+    <link href="{{url_for('static', filename='css/shopping_cart_test.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
+    <!-- <link href="{{url_for('static', filename='css/shopping_cart_test2.css')}}" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro"> -->
-    <link rel="stylesheet" href="https://fonts.googleeapis.com/css?family=Roboto:300,400,500">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,300&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    <title>Adoption</title>
+    <title>Amy Bakery Website</title>
 </head>
+
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <header>
+        <div class="overlay"></div>
 
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
-            <a class="btn btn-info" href="{{ url_for('login') }}">Login</a> {% else %}
-            <a class="nav-item nav-link" href="{{ url_for('shopping_cart', username=current_user.username)}}">My Shopping Cart</a>
-            <a class="nav-item nav-link" href="{{ url_for('add_products') }}">Add Products</a>
-            <a class="nav-item nav-link" href="{{ url_for('list_products') }}">List of Products</a>
-            <a class="nav-item nav-link" href="{{ url_for('del_products') }}">Delete Products</a>
 
-            <a class="btn btn-info" href="{{ url_for('logout') }}">Logout</a> {% endif %}
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>{% if current_user.is_anonymous %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>{% else %}
+                <li class="cart">
+                    <a href="{{ url_for('shopping_cart', username=current_user.username)}}">
+                        <ion-icon name="basket"></ion-icon>Cart<span>0</span>
+                    </a>
+                </li>
+                <li><a href="{{ url_for('add_products') }}">Add Products</a></li>
+                <li><a href="{{ url_for('list_products') }}">List of Products</a></li>
+                <li><a href="{{ url_for('del_products') }}">Delete Products</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>{% endif %}
 
-        </div>
 
-    </nav>
+            </ul>
+        </nav>
+
+
+        <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
+        <!-- <div class="navbar-nav"> -->
+        <!-- <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %} -->
+        <!-- <a class="btn btn-info" href="{{ url_for('login') }}">Login</a> {% else %} -->
+
+        <!-- <a class="nav-item nav-link" href="{{ url_for('shopping_cart', username=current_user.username)}}">
+                <ion-icon name="basket"></ion-icon>Cart<span>0</span>
+            </a>
+            <a class="nav-item nav-link" href="{{ url_for('add_products') }}">Add Products</a> -->
+
+
+
+        <!-- <a class="nav-item nav-link" href="{{ url_for('list_products') }}">List of Products</a>
+            <a class="nav-item nav-link" href="{{ url_for('del_products') }}">Delete Products</a> -->
+        <!-- 
+            <a class="btn btn-info" href="{{ url_for('logout') }}">Logout</a> {% endif %} -->
+
+        <!-- </div> -->
+
+        <!-- </nav> -->
+
+
+    </header>
+    <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
 
     {% block content %} {% endblock %}
 </body>
+
 
 </html>

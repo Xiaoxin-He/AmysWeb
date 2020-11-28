@@ -15,6 +15,7 @@ class AddProductsForm(FlaskForm):
     product_name = StringField('Name of Product:')
     file = FileField('File')
     product_description = StringField('Description of Product:')
+    product_price = StringField('Price of Product:')
     # picture = FileField('Update product Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Add Product')
 

@@ -1,30 +1,33 @@
 {% extends "base.html" %} {% block content %}
-<div class="jumbotron">
-    <h1>Here is a list of all available products.</h1>
-    <ul>
-        {% for p in product_images %}
-        <li>{{p[0]}}</li>
-        {% endfor %}
-    </ul>
+<p id="length">There are {{ total_item_in_home_page[0] }} items</p>
+
+<button type="button" onclick="myfunc('{{ total_item_in_home_page[0] }}')">try</button>
 
 
-    <div class="row">
-        {% for products_list in all_products_data %}
-        <div class="col-sm-2">
-            <div class="card" style="width: 19rem;">
-                <img class="card-img-top" src="{{ url_for('upload', filename=products_list[3]) }}" style="width: 300px">
-                <div class="card-body">
-                    <h5 class="card-title">{{products_list[1]}}</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="{{ url_for('add_products') }}" class="btn btn-info">Add To Card</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+<div class="container">
+
+    {% for products_list in all_products_data %}
+    <div class="image" name="total">
+        <!-- <input name="id_{{loop.index}}" hidden value="{{loop.index}}"> -->
+        <img id="product-image-{{loop.index}}" src="{{ url_for('upload', filename=products_list[3]) }}" style="width: 300px">
+        <h3 id="product-name-{{loop.index}}">{{ products_list[1] }}</h3>
+        <h3 id="product-description-{{loop.index}}">{{ products_list[2] }}</h3>
+        <h3 id="product-price-{{loop.index}}">{{ products_list[4] }}</h3>
+        <button type="button" class="add-cart cart" onclick="myfunction('{{loop.index}}')">Add Cart</button>
+
+
+        <input type=hidden value="15 ">
     </div>
-
-
+    {% endfor %}
 
 
 </div>
+
+
+
+
+
+<script src="{{url_for( 'static', filename='javascript/main.js' )}} "></script>
+
+<!-- </div> -->
 {% endblock %}

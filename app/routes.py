@@ -22,8 +22,9 @@ from flask import url_for, current_app
 
 from flask import send_file, send_from_directory, safe_join, abort
 
+import json
 
-import cv2
+# import cv2
 import time
 
 from datetime import timedelta
@@ -60,9 +61,12 @@ def index():
     conn = get_db_connection()
     # get all data for products table from database
     all_products_data = conn.execute('SELECT * FROM products;').fetchall()
+    total_item_in_home_page = conn.execute('SELECT count(*) FROM products;').fetchone()
+    get_json_data = conn.execute('SELECT * FROM products;').fetchall()
+    # final_data = jsonify(json.dumps(get_json_data))
     conn.close()
 
-    return render_template('index.html', all_products_data = all_products_data)
+    return render_template('index.html', all_products_data = all_products_data, total_item_in_home_page = total_item_in_home_page)
 
 @app.route('/my_shopping_cart/<username>')
 def shopping_cart(username):
@@ -71,8 +75,7 @@ def shopping_cart(username):
     all_products_data = conn.execute('SELECT * FROM products;').fetchall()
     conn.close()
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('shopping_cart.html', user = user, all_products_data = all_products_data)
-    
+    return render_template('shopping_cart_test.html', user = user, all_products_data = all_products_data)
 # @app.route('/userTransactions/<username>')
 # def userTransactions(username):
 
@@ -150,6 +153,7 @@ def add_products():
     if form.validate_on_submit():
         product_name = form.product_name.data
         product_description = form.product_description.data
+        product_price = form.product_price.data
         # product_image = form.product_image.data
         
         # this 'filename' is the name in add.html!
@@ -159,7 +163,7 @@ def add_products():
 
         if filename != '':
             uploaded_file.save(os.path.join('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename))
-        new_product = Product(product_name, product_description, product_image)
+        new_product = Product(product_name, product_description, product_image, product_price)
         db.session.add(new_product)
 
         db.session.commit()
