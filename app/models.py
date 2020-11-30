@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password = db.Column(db.String(128))
 
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -70,6 +71,7 @@ class Order(db.Model):
     __tablename__ = 'orders'
     order_id = db.Column(db.Integer,primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    incart_number = db.Column(db.Integer)
     # product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
 
 class Order_item(db.Model):

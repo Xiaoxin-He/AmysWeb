@@ -34,7 +34,8 @@
 
         <nav>
             <ul class="test">
-                <li><a href="{{ url_for('index') }}" class="btn btn-light">Home</a></li>{% if current_user.is_anonymous %}
+                <li><a href="{{ url_for('index') }}" class="btn btn-light">Home</a></li>
+                {% if current_user.is_anonymous %}
                 <li><a href="{{ url_for('login') }}" class="btn btn-light">Login</a></li>{% else %}
                 <li class="cart">
                     <a href="{{ url_for('shopping_cart', username=current_user.username)}}">
@@ -51,7 +52,10 @@
                 <li><a href="{{ url_for('edit_profile') }}" class="btn btn-light">Edit your profile</a></li>
 
 
-                <li><a href="{{ url_for('logout') }}" class="btn btn-light">Logout</a></li>{% endif %}
+                <li><a href="{{ url_for('admin_login') }}" class="btn btn-light">admin_login</a></li>
+                <li><a href="{{ url_for('logout') }}" class="btn btn-light">Logout</a></li>
+
+                {% endif %}
 
 
             </ul>

@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect,session, request, make_response,jsonify, Response
 from flask.globals import current_app
 from app import app, db
-from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm, EditProfileForm, AdminLoginForm
 from app.models import User, Product
 from flask_login import current_user, login_user, logout_user, login_required
 from flask.helpers import url_for
@@ -120,29 +120,47 @@ def checkout(username):
 
     connection=sqlite3.connect('app.db')
     cursor=connection.cursor()
-    cursor.execute('INSERT INTO orders (user_id) VALUES (?)',(user_id,))
-    order_id = cursor.lastrowid
+    # cursor.execute('INSERT INTO orders (user_id) VALUES (?)',(user_id,))
+    # order_id = cursor.lastrowid
     # print("order id", cursor.lastrowid)
     connection.commit()
 
+    item_price = 0
+    count = 0
     for key in cart_items:
         item = cart_items[key]
         count = item["inCart"]
+        # print("count", item["price"])
+        item_price = item["price"]
+        cursor.execute('INSERT INTO orders (incart_number, user_id) VALUES (?,?)',(count,user_id))
+        order_id = cursor.lastrowid
         product_id = item["product_id"]
         for i in range(count):
            cursor.execute("INSERT INTO order_items (order_id, product_id) VALUES (?,?)",(order_id, product_id))
+           
+        #    order_id = cursor.lastrowid
            connection.commit()
     connection.close()
 
+    item_price = float(item_price)
+    count = float(count)
+    # str
+    # print("type of price", type(item_price))
+    # print("type of count", type(count))
+    # print("total", item_price*count)
+    # total_price = item_price*count
+    # total_cost(total_price)
+
     return render_template('checkout.html', user=user)
 
+ 
 
 @app.route('/order_history/<username>')
 def order_history(username):
     user = User.query.filter_by(username=username).first_or_404()
-
     # SELECT u.id, COUNT(order_id) FROM users u, orders o WHERE u.id = o.user_id GROUP BY o.order_id LIMIT 1;
     conn = get_db_connection()
+
 
     get_order_count_user = conn.execute('''
 SELECT COUNT(DISTINCT o.order_id)
@@ -158,11 +176,10 @@ GROUP BY u.id
    ''').fetchall()
     
     get_order_details = conn.execute('''
-SELECT DISTINCT u.username, o.order_id, p.product_name, p.product_image, p.product_price
+SELECT DISTINCT u.username, o.order_id, p.product_name, p.product_image, p.product_price, o.incart_number
 FROM orders o, users u, order_items oi, products p
 INNER JOIN users ON u.id = o.user_id
 INNER JOIN order_items ON o.order_id = oi.order_id
-INNER JOIN products ON p.id = oi.product_id
     ''').fetchall()
 
     conn.close()
@@ -184,20 +201,20 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html',title='Log in',form=form)
 
-# @app.route('/admin_login', methods = ['GET', 'POST'])
-# def admin_login():
-#     # if current_user.is_authenticated:
-#     #     return redirect(url_for('admin_index'))
-#     form = AdminLoginForm()
-#     if form.validate_on_submit():
-#         user = User.query.filter_by(username = form.username.data).first()
-#         if user is None or not user.check_password(form.password.data):
-#             flash('Invalid username or password')
-#             return redirect(url_for('login'))
-#         login_user(user, remember=form.remember_me.data)
-#         # return redirect(url_for('admin_index'))
-#         return render_template('admin_index.html')
-#     return render_template('admin_login.html',title='Log in admin',form=form)
+@app.route('/admin_login', methods = ['GET', 'POST'])
+def admin_login():
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('admin_index'))
+    form = AdminLoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username = form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        # return redirect(url_for('admin_index'))
+        return redirect(url_for('index'))
+    return render_template('admin_login.html',title='Log in admin',form=form)
 
 @app.route('/admin_index')
 def admin_index():
