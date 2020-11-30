@@ -32,7 +32,9 @@
                 <div>
                     {{ form.hidden_tag() }}
                     <label for="InputUsernameLabel">Enter your username</label>
-                    <br> {{ form.username(size=32) }}
+                    <br>
+                    <p name="nm">{{ form.username(size=32) }}</p>
+
                 </div>
             </div>
 
@@ -40,6 +42,7 @@
                 <div>
                     <label for="InputPasswordLabel">Enter your password</label>
                     <br> {{ form.password(size=32) }}
+
                 </div>
             </div>
 

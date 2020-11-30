@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block content %}
+<h5>prices are ranked from high to low</h5>
 
-<h5>prices are not ordered</h5>
 <p id="length">There are {{ total_item_in_home_page[0] }} items in the page</p>
 
 <div class="container">
@@ -21,16 +21,17 @@
     </div>
 </div>
 
+
 <div class="container">
-    {% for products_list in all_products_data %}
+    {% for high_products_list in get_price_high_to_low %}
     <div class="image" name="total" id="myTable">
         <!-- <input name="id_{{loop.index}}"> -->
 
-        <h3 id="product-id-{{loop.index}}" class="product-id">{{ products_list[0] }}</h3>
-        <img id="product-image-{{loop.index}}" src="{{ url_for('upload', filename=products_list[3]) }}" style="width: 300px">
-        <h3 id="product-name-{{loop.index}}">{{ products_list[1] }}</h3>
-        <h3 id="product-description-{{loop.index}}">{{ products_list[2] }}</h3>
-        <h3 id="product-price-{{loop.index}}">{{ products_list[4] }}</h3>
+
+        <img id="product-image-{{loop.index}}" src="{{ url_for('upload', filename=high_products_list[2]) }}" style="width: 300px">
+        <h3 id="product-name-{{loop.index}}">{{ high_products_list[1] }}</h3>
+        <h3 id="product-description-{{loop.index}}">{{ high_products_list[3] }}</h3>
+        <h3 id="product-price-{{loop.index}}">{{ high_products_list[0] }}</h3>
         <button type="button" class="add-cart cart" onclick="myfunction('{{loop.index}}')">Add Cart</button>
 
 
@@ -42,25 +43,6 @@
 </div>
 
 <script>
-    // function mySearchFunction(index) {
-    //     var input, filter, ul, li, a, i, txtValue;
-    //     input = document.getElementById("myInput");
-    //     filter = input.value.toUpperCase();
-    //     image = document.getElementById("image");
-    //     h3 = ul.getElementsByTagName("h3");
-
-    //     for (i = 0; i < h3.length; i++) {
-    //         p_name = document.getElementById('product-name-' + index).innerHTML;
-    //         txtValue = p_name;
-    //         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-    //             h3[i].style.display = "";
-    //         } else {
-    //             h3[i].style.display = "none";
-    //         }
-    //     }
-
-    // }
-
     $(document).ready(function() {
         $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
@@ -71,12 +53,4 @@
     });
 </script>
 
-
-
-
-
-
-<script src="{{url_for( 'static', filename='javascript/main.js' )}} "></script>
-
-<!-- </div> -->
 {% endblock %}

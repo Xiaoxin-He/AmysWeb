@@ -1,11 +1,13 @@
-from flask import render_template, flash, redirect,session, request, make_response,jsonify
+from flask import render_template, flash, redirect,session, request, make_response,jsonify, Response
 from flask.globals import current_app
 from app import app, db
-from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm
+from app.forms import LoginForm, AddProductsForm, DeleteForm, RegistrationForm, EditProfileForm
 from app.models import User, Product
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 from flask.helpers import url_for
 import sqlite3
+
+
 # **************
 import imghdr
 import os
@@ -33,19 +35,6 @@ from datetime import timedelta
 if __name__ == '__main__':
     app.run(debug=True)
 
-# app.config['SECRET_KEY'] = 'thisisasecret'
-# app.config['UPLOADED_IMAGES_DEST'] = 'static/images'
-
-# images = UploadSet('images', IMAGES)
-# configure_uploads(app, images)
-
-
-
-# PEOPLE_FOLDER = os.path.join('static', 'images')
-# app.config['IMAGE_UPLOADS'] = PEOPLE_FOLDER
-# path = '/Users/xiaoxinhe/Desktop/amysBakeryWeb/app/static/images'
-
-# folder = os.fsencode(path)
 
 def get_db_connection():
     conn = sqlite3.connect('app.db')
@@ -62,11 +51,42 @@ def index():
     # get all data for products table from database
     all_products_data = conn.execute('SELECT * FROM products;').fetchall()
     total_item_in_home_page = conn.execute('SELECT count(*) FROM products;').fetchone()
-    get_json_data = conn.execute('SELECT * FROM products;').fetchall()
-    # final_data = jsonify(json.dumps(get_json_data))
+    get_price_high_to_low = conn.execute('''
+    SELECT p.product_price, p.product_name, p.product_image,p.product_description
+    FROM products p
+    ORDER BY p.product_price DESC
+    ''').fetchall()
     conn.close()
 
     return render_template('index.html', all_products_data = all_products_data, total_item_in_home_page = total_item_in_home_page)
+
+
+@app.route('/high_price')
+def high_price():
+    conn = get_db_connection()
+    total_item_in_home_page = conn.execute('SELECT count(*) FROM products;').fetchone()
+    
+    get_price_high_to_low = conn.execute('''
+    SELECT p.product_price, p.product_name, p.product_image,p.product_description
+    FROM products p
+    ORDER BY p.product_price DESC
+    ''').fetchall()
+    conn.close()
+    return render_template('high_price.html', get_price_high_to_low = get_price_high_to_low, total_item_in_home_page = total_item_in_home_page)
+
+
+@app.route('/low_price')
+def low_price():
+    conn = get_db_connection()
+    total_item_in_home_page = conn.execute('SELECT count(*) FROM products;').fetchone()
+    
+    get_price_high_to_low = conn.execute('''
+    SELECT p.product_price, p.product_name, p.product_image,p.product_description
+    FROM products p
+    ORDER BY p.product_price ASC
+    ''').fetchall()
+    conn.close()
+    return render_template('low_price.html', get_price_high_to_low = get_price_high_to_low, total_item_in_home_page = total_item_in_home_page)
 
 @app.route('/my_shopping_cart/<username>')
 def shopping_cart(username):
@@ -75,7 +95,7 @@ def shopping_cart(username):
     all_products_data = conn.execute('SELECT * FROM products;').fetchall()
     conn.close()
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('shopping_cart_test.html', user = user, all_products_data = all_products_data)
+    return render_template('shopping_cart.html', user = user, all_products_data = all_products_data)
 # @app.route('/userTransactions/<username>')
 # def userTransactions(username):
 
@@ -89,13 +109,65 @@ def shopping_cart(username):
   
 #     return render_template('userTransactions.html', user=user, products = products)
 
-# @app.route('/checkout/<username>')
-# def checkout(username):
+# http://localhost:5000/checkout/shirley1
+@app.route('/checkout/<username>', methods = ['POST'])
+def checkout(username):
 
-#     user = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter_by(username=username).first_or_404()
 
-#     return render_template('checkout.html', user=user)
+    user_id = user.id
+    cart_items = request.json
 
+    connection=sqlite3.connect('app.db')
+    cursor=connection.cursor()
+    cursor.execute('INSERT INTO orders (user_id) VALUES (?)',(user_id,))
+    order_id = cursor.lastrowid
+    # print("order id", cursor.lastrowid)
+    connection.commit()
+
+    for key in cart_items:
+        item = cart_items[key]
+        count = item["inCart"]
+        product_id = item["product_id"]
+        for i in range(count):
+           cursor.execute("INSERT INTO order_items (order_id, product_id) VALUES (?,?)",(order_id, product_id))
+           connection.commit()
+    connection.close()
+
+    return render_template('checkout.html', user=user)
+
+
+@app.route('/order_history/<username>')
+def order_history(username):
+    user = User.query.filter_by(username=username).first_or_404()
+
+    # SELECT u.id, COUNT(order_id) FROM users u, orders o WHERE u.id = o.user_id GROUP BY o.order_id LIMIT 1;
+    conn = get_db_connection()
+
+    get_order_count_user = conn.execute('''
+SELECT COUNT(DISTINCT o.order_id)
+FROM orders o,
+(
+SELECT DISTINCT u.username, o.order_id, p.product_name
+FROM orders o, users u, order_items oi, products p
+INNER JOIN users ON u.id = o.user_id
+INNER JOIN order_items ON o.order_id = oi.order_id
+INNER JOIN products ON p.id = oi.product_id
+GROUP BY u.id
+)as ORDER_number
+   ''').fetchall()
+    
+    get_order_details = conn.execute('''
+SELECT DISTINCT u.username, o.order_id, p.product_name, p.product_image, p.product_price
+FROM orders o, users u, order_items oi, products p
+INNER JOIN users ON u.id = o.user_id
+INNER JOIN order_items ON o.order_id = oi.order_id
+INNER JOIN products ON p.id = oi.product_id
+    ''').fetchall()
+
+    conn.close()
+
+    return render_template('order_history.html', user=user, get_order_count_user = get_order_count_user, get_order_details = get_order_details)
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -172,7 +244,8 @@ def add_products():
 
     return render_template('add.html', form = form)
 
-
+# @app.route('/test_get_data', methods=['POST'])
+# def get_data():
 
 
 @app.route('/list')
@@ -219,3 +292,21 @@ def register():
 @app.route('/uploads/<filename>')
 def upload(filename):
     return send_from_directory('/Users/xiaoxinhe/Desktop/amysWeb/app/static/images', filename)
+
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('edit_profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+     
+    return render_template('edit_profile.html', title='Edit Profile',
+                           form=form)

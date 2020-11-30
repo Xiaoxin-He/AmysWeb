@@ -1,0 +1,70 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+    h5 {
+        font-family: arial, sans-serif;
+    }
+    
+    h2 {
+        font-family: arial, sans-serif;
+    }
+    
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 80%;
+    }
+    
+    td,
+    th {
+        border: 2px solid pink;
+        text-align: left;
+        padding: 8px;
+    }
+    
+    .top {
+        font-size: large;
+        color: white;
+        background-color: rgb(209, 159, 167);
+    }
+</style>
+
+<h2>history of orders</h2>
+{% for get_count in get_order_count_user %}
+<h5>Thank you! you have placed {{ get_count[0]}} orders</h5>
+{% endfor %}
+
+
+<div class="container">
+    <table>
+
+        <tr class="top">
+            <th>Order ID</th>
+            <th>Username of Order</th>
+            <th>Order Details:</th>
+            <th>Products' images:</th>
+            <th>Products' prices:</th>
+        </tr>
+        <tr>
+            {% for details in get_order_details %}
+            <td>{{ details[1] }}</td>
+            <td>{{ details[0] }}</td>
+            <td>{{ details[2] }}</td>
+
+            <td>
+                <img src="{{ url_for('upload', filename=details[3]) }}" style="width: 100px">
+            </td>
+
+            <td>{{ details[4] }}</td>
+
+
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+
+
+
+
+{% endblock %}

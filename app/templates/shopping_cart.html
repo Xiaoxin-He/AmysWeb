@@ -1,40 +1,32 @@
-{% extends "base.html" %} {% block content %}
-<h1>shopping cart</h1>
-<h2>{{user.username}}</h2>
-<a href="#" class="continue-shopping">Continue Shopping</a>
-<a href="#" class="checkout-button">Checkout</a>
-<table cellspacing="0" class="shopping-cart">
-    <thead>
-        <tr class="headings">
-            <th class="link">&nbsp;</td>
-                <th class="product">Item</td>
-                    <th class="price">Price</td>
-                        <th class="quantity">Quantity</td>
-                            <th class="price">Total</td>
-        </tr>
-    </thead>
-
-    <tbody>
-        {% for product in all_products_data %}
-        <tr>
-            <td class="link"><label for="remove">remove</label></td>
-            <td class="product">
-                <div class="product-img">
-                    <img src="{{ url_for('upload', filename=product[3]) }}">
-                </div>
-                <div class="product_name">{{ product[1] }}</div>
-            </td>
-            <td class="price">
-                {{ product[4] }}
-            </td>
-            <td class="quantity">
-            </td>
-            <td class="total">
-            </td>
-        </tr>
+{% extends 'base.html' %} {% block content %}
 
 
-        {% endfor %}
-    </tbody>
-</table>
+<h1>Shopping Cart</h1>
+
+<div class="products-container">
+    <div class="products-header">
+        <h5 class="products-title">PRODUCT</h5>
+        <h5 class="price sm-hide">PRICE</h5>
+        <h5 class="quantity">QUANTITY</h5>
+        <h5 class="total">TOTAL</h5>
+    </div>
+    <div class="products">
+
+    </div>
+    <a href="{{ url_for('order_history', username=current_user.username) }}">
+        <button type="button" class="btn btn-info" onclick="checkoutFunction()">Proceed To Checkout</button>
+    </a>
+
+
+
+
+
+
+</div>
+
+
+
+
+<script src="{{url_for( 'static', filename='javascript/main.js' )}} "></script>
+
 {% endblock %}

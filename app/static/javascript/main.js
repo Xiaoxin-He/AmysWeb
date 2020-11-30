@@ -25,12 +25,15 @@ function myfunction(index) {
     p_description = document.getElementById('product-description-' + index).innerHTML;
     // console.log(p_des);
 
+    p_id = document.getElementById('product-id-' + index).innerHTML;
+    console.log("id = ", p_id);
 
     p_price = document.getElementById('product-price-' + index).innerHTML;
     let p_image = document.getElementById('product-image-' + index).src;
 
     // p_image = document.getElementById('product-image-' + index).innerHTML;
     let products = [{
+        product_id: p_id,
         name: p_name,
         tag: p_description,
         price: p_price,
@@ -177,9 +180,9 @@ function displayCart(image) {
             <div class="product">
                 <ion-icon name="trash-outline"></ion-icon>
                 <img src="${items.image}">
-                <span class="sm-hide">${items.name}</span>
+                <span class="sm-hide" id="p_name">${items.name}</span>
              </div>
-             <div class = "price sm-hide">$${items.price}</div>
+             <div class = "price sm-hide" id="p_price">$${items.price}</div>
              <div class = "quantity">
                  <ion-icon class="decrease" name="caret-back-circle-outline"></ion-icon>
                  <span>${items.inCart}</span>
@@ -240,33 +243,8 @@ function manageQuantity() {
     let currentProduct = '';
     let cartItems = localStorage.getItem('productsInCart');
     cartItems = JSON.parse(cartItems);
-    // let productName = cartItems[currentProduct];
+    console.log("current cartiTEMS", cartItems);
 
-
-    // console.log("hello manage" + decreaseButtons);\\
-    // cartItems[product[0].name]
-    // cartItems
-    // x = cartItems;
-    console.log("try get item", cartItems);
-    // for (i = 0; i < cartItems.name.length; i++) {
-    //     x += myObj.cars[i] + "<br>";
-    // }
-
-
-
-
-    // if (Object.keys(cartItems).length == 1) {
-    //     console.log("the first item in cart");
-    //     localStorage.setItem('currentItemiN', currentProduct);
-
-
-    // } else {
-
-    //     let gotItem = localStorage.getItem("currentItemiN");
-    //     console.log("there are one than one item in the cart");
-    //     console.log("has item", gotItem);
-
-    // }
 
     for (let i = 0; i < increaseButtons.length; i++) {
 
@@ -280,23 +258,25 @@ function manageQuantity() {
             // console.log("cartitems with currentProduct ", cartItems[currentProduct]);
             console.log("try get item  2222", cartItems[currentProduct].name);
 
+
             if (cartItems[currentProduct].inCart > 1) {
                 cartItems[currentProduct].inCart -= 1; //can read
                 let cartCost = localStorage.getItem("totalCost");
                 let gotItem = localStorage.getItem("currentItemiN");
-                console.log("check current product in cart", gotItem);
-                console.log("get lenght of", Object.keys(cartItems).length);
+                // console.log("check current product in cart", gotItem);
+                // console.log("get lenght of", Object.keys(cartItems).length);
 
-                // cartNumbers(cartItems[currentProduct], "decrease");
-                // totalCost(cartItems[currentProduct], "decrease");
 
-                // console.log("totalcost of p", cartCost);
-                // console.log(" decrease items.inCart", cartItems[currentProduct].inCart);
-                // console.log(' decrease items.price total', cartItems[currentProduct].price * cartItems[currentProduct].inCart);
+                var current_total_price = 0;
+                for (var key in cartItems) {
+                    var item = cartItems[key];
+                    current_total_price += item["price"] * item["inCart"];
+                }
 
-                localStorage.setItem('totalCost', cartItems[currentProduct].price * cartItems[currentProduct].inCart);
 
-                localStorage.setItem('cartNumbers', cartItems[currentProduct].inCart);
+                localStorage.setItem('totalCost', current_total_price);
+
+
                 localStorage.setItem('productsInCart', JSON.stringify(cartItems));
 
 
@@ -314,16 +294,15 @@ function manageQuantity() {
 
             cartItems[currentProduct].inCart += 1;
 
-            // cartNumbers(cartItems[currentProduct]);
-            // totalCost(cartItems[currentProduct]);
 
-            // console.log(" Increase items.inCart", cartItems[currentProduct].inCart); //good
-            // console.log(" Increase items.price total", cartItems[currentProduct].price * cartItems[currentProduct].inCart);
+            var current_total_price = 0;
+            for (var key in cartItems) {
+                var item = cartItems[key];
+                current_total_price += item["price"] * item["inCart"];
+            }
 
 
-            // console.log("can i get total name of prouct?", cartItems[currentProduct]);
-
-            localStorage.setItem('totalCost', cartItems[currentProduct].price * cartItems[currentProduct].inCart);
+            localStorage.setItem('totalCost', current_total_price);
 
             localStorage.setItem('cartNumbers', cartItems[currentProduct].inCart);
             localStorage.setItem('productsInCart', JSON.stringify(cartItems)); //good
@@ -335,6 +314,23 @@ function manageQuantity() {
 
 
 
+function checkoutFunction() {
+    let cartItems = localStorage.getItem('productsInCart');
+    cartItems = JSON.parse(cartItems);
+
+    fetch('http://localhost:5000/checkout/shirley1', {
+            method: 'POST',
+            body: JSON.stringify(cartItems),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+        });
+
+}
 
 
 

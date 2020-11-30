@@ -13,7 +13,6 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password = db.Column(db.String(128))
 
-
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -23,12 +22,20 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
     
+    
     # def setCurrentUser(self):
     #     login_user(self)
     #     session["USERNAME"] = self.username
     
-    # def getCurrentUserName():
-    #     return session.get("USERNAME")
+    def getCurrentUserName():
+        return session.get("USERNAME")
+
+    def getCurrentUser():
+        username = User.getCurrentUserName()
+        if not username is None:
+            user = User.query.filter_by(username=username).first()
+            return user
+        return None
 
 
 
@@ -36,24 +43,6 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
-
-# class Product(db.Model):
-#     __tablename__ = 'products'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     product_name = db.Column(db.String(64))
-#     description = db.Column(db.Text)
-#     price = db.Column(db.INTEGER)
-#     product_kind = db.Column(db.String(128))
-
-#     def __Init__(self, product_name):
-#         self.product_name = product_name
-
-#     def __repr__(self) :
-#         return '<Product {}>'.format(self.product_name)
-    
-
-    
 class Product(db.Model):
     
     __tablename__ = 'products'
@@ -74,6 +63,22 @@ class Product(db.Model):
 
     def __repr__(self):
         return f"Product name: {self.product_name}  --- id is : {self.id}  --- description : {self.product_description}  ----  with {self.product_image} ---has {self.product_price}"
+
+
+
+class Order(db.Model):
+    __tablename__ = 'orders'
+    order_id = db.Column(db.Integer,primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
+
+class Order_item(db.Model):
+    __tablename__ = 'order_items'
+    order_item_id = db.Column(db.Integer,primary_key = True)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
+
+
 
 class admin(db.Model):
     __tablename__ = 'administrator'
