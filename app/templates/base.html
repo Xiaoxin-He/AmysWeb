@@ -34,6 +34,7 @@
 
         <nav>
             <ul class="test">
+
                 <li><a href="{{ url_for('index') }}" class="btn btn-light">Home</a></li>
                 {% if current_user.is_anonymous %}
                 <li><a href="{{ url_for('login') }}" class="btn btn-light">Login</a></li>{% else %}
@@ -51,9 +52,14 @@
 
                 <li><a href="{{ url_for('edit_profile') }}" class="btn btn-light">Edit your profile</a></li>
 
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Launch static backdrop modal
+                  </button>
 
                 <li><a href="{{ url_for('admin_login') }}" class="btn btn-light">admin_login</a></li>
                 <li><a href="{{ url_for('logout') }}" class="btn btn-light">Logout</a></li>
+
+
 
                 {% endif %}
 
